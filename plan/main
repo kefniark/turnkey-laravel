@@ -1,0 +1,10 @@
+#include <turnkey/base>
+#include <turnkey/lamp>
+
+php-pear
+php5-dev
+php5-xsl
+
+php5-sqlite             /* symfony dep */
+php5-intl               /* symfony dep */
+

@@ -1,0 +1,109 @@
+#!/bin/sh -ex
+
+NAME=symfony
+DB_PASS=$(mcookie)
+
+WEBROOT=/var/www/symfony
+LOCAL_SRC=/usr/local/src
+
+# php tweaks
+PHPINI1=/etc/php5/apache2/php.ini
+PHPINI2=/etc/php5/cli/php.ini
+
+sed -i "s|^;date.timezone\(.*\)|date.timezone = 'America/Los_Angeles'|" $PHPINI1
+sed -i "s|^;date.timezone\(.*\)|date.timezone = 'America/Los_Angeles'|" $PHPINI2
+
+sed -i "s|^short_open_tag = On|short_open_tag = Off|" $PHPINI1
+sed -i "s|^short_open_tag = On|short_open_tag = Off|" $PHPINI2
+
+# start mysql server
+/etc/init.d/mysql start
+
+# create symfony database and user
+mysql --user=root --password=$MYSQL_PASS --batch --execute "\
+CREATE DATABASE $NAME; \
+GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost IDENTIFIED BY '$DB_PASS'; \
+FLUSH PRIVILEGES;"
+
+# install and configure symfony
+tar -zxf /usr/local/src/Symfony*.tgz -C /var/www/
+mv /var/www/Symfony $WEBROOT
+chown root:root -R $WEBROOT
+
+cat > $WEBROOT/app/config/parameters.ini << EOF
+[parameters]
+    database_driver   = pdo_mysql
+    database_host     = localhost
+    database_port     = 3036
+    database_name     = symfony
+    database_user     = $NAME
+    database_password = $DB_PASS
+
+    mailer_transport  = smtp
+    mailer_host       = localhost
+    mailer_user       =
+    mailer_password   =
+
+    locale            = en
+
+    secret            = $(mcookie)
+EOF
+
+# verify configuration
+cd $WEBROOT
+php app/check.php
+
+# tweak permissions
+chown -R www-data:www-data $WEBROOT/app/cache
+chown -R www-data:www-data $WEBROOT/app/logs
+
+# setup app_dev as default, and update welcome page
+HTACCESS=$WEBROOT/web/.htaccess
+cat > $HTACCESS <<EOF
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    # RewriteRule ^(.*)$ app.php [QSA,L]
+    RewriteRule ^(.*)$ app_dev.php [QSA,L]
+</IfModule>
+EOF
+
+APPDEV=$WEBROOT/web/app_dev.php
+cat > $APPDEV <<EOF
+<?php
+// Uncomment the following and add your IP address for security
+/*
+if (!in_array(@\$_SERVER['REMOTE_ADDR'], array(
+    '127.0.0.1',
+    '::1',
+))) {
+    header('HTTP/1.0 403 Forbidden');
+    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+}
+*/
+
+require_once __DIR__.'/../app/bootstrap.php.cache';
+require_once __DIR__.'/../app/AppKernel.php';
+
+use Symfony\Component\HttpFoundation\Request;
+
+\$kernel = new AppKernel('dev', true);
+\$kernel->loadClassCache();
+\$kernel->handle(Request::createFromGlobals())->send();
+EOF
+
+TEMPLATE=$WEBROOT/src/Acme/DemoBundle/Resources/views/Welcome/index.html.twig
+sed -i "s|<h1>\(.*\)</h1>|<h1>Welcome to TurnKey Symfony</h1>|" $TEMPLATE
+sed -i "s|<p>Congratulations\(.*\)</p>|<p>This welcome page is being served via app_dev.php.<br/>You should secure it by specifying your IP address in <i>$APPDEV</i>.<br/>When ready for production, update <i>$HTACCESS</i> to specify app.php instead.</p><p><i>Note: The database configuration is already setup for you, enjoy!</i></p>|" $TEMPLATE
+
+# configure apache
+a2dissite default
+a2ensite symfony
+a2enmod rewrite
+
+# stop mysql
+/etc/init.d/mysql stop
+
+# cleanup
+rm -f $LOCAL_SRC/Symfony*
+
