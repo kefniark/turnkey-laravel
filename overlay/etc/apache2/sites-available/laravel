@@ -4,24 +4,18 @@ NameVirtualHost *:443
 <VirtualHost *:80>
     UseCanonicalName Off
     ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/symfony/web
+    DocumentRoot /var/www/laravel/web
 </VirtualHost>
 
 <VirtualHost *:443>
     SSLEngine on
     SSLCertificateFile /etc/ssl/certs/cert.pem
     ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/symfony/web
+    DocumentRoot /var/www/laravel/web
 </VirtualHost>
 
-<Directory /var/www/symfony/web>
+<Directory /var/www/laravel/web>
     DirectoryIndex index.php
-    AllowOverride all
-    Allow from all
-</Directory>
-
-Alias /sf /usr/share/php/data/symfony/web/sf
-<Directory /usr/share/php/data/symfony/web/sf>
     AllowOverride all
     Allow from all
 </Directory>
