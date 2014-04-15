@@ -1,33 +1,47 @@
 #!/bin/sh -ex
 
+SRC=/usr/local/src
 NAME=laravel
+WEBROOT=/var/www/laravel
+
+DB_NAME=laravel
+DB_USER=laravel
 DB_PASS=$(mcookie)
 
-WEBROOT=/var/www/laravel
-LOCAL_SRC=/usr/local/src
+# unpack laravel zip
+unzip -q $SRC/$NAME.zip -d $(dirname $WEBROOT)
+mv $(dirname $WEBROOT)/laravel* $WEBROOT
+chown -R www-data:www-data $WEBROOT
+rm $SRC/$NAME.zip
+
+# install laravel dependencies
+cd $WEBROOT
+composer self-update
+composer install
+
+# workaround innodb crap during build!
+rm -f /var/lib/mysql/ib_logfile*
 
 # start mysql server
 /etc/init.d/mysql start
 
-# create symfony database and user
-mysql --user=root --password=$MYSQL_PASS --batch --execute "\
-CREATE DATABASE $NAME; \
-GRANT ALL PRIVILEGES ON $NAME.* TO $NAME@localhost IDENTIFIED BY '$DB_PASS'; \
-FLUSH PRIVILEGES;"
+# create the database and user
+mysql --defaults-extra-file=/etc/mysql/debian.cnf <<EOF
+CREATE DATABASE $DB_NAME;
+GRANT SELECT,INSERT,UPDATE,DELETE,CREATE,DROP,ALTER
+ON $DB_NAME.*
+TO $DB_USER@localhost
+IDENTIFIED BY '$DB_PASS';
+FLUSH PRIVILEGES;
+EOF
 
-# install and configure laravel
-cd $WEBROOT
-
-# setting permissions for local storage
-chmod -R 755 $WEBROOT/app/storage
-
-# install composer dependencies
-php composer install
-
-# configure apache
+# setup apache configuration and complete installation
 a2dissite default
 a2ensite laravel
 a2enmod rewrite
 
-# stop mysql
+# stop mysql server
 /etc/init.d/mysql stop
+
+# workaround innodb crap during build!
+rm -f /var/lib/mysql/ib_logfile*

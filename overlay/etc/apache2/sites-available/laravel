@@ -4,17 +4,17 @@ NameVirtualHost *:443
 <VirtualHost *:80>
     UseCanonicalName Off
     ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/laravel/web
+    DocumentRoot /var/www/laravel/public
 </VirtualHost>
 
 <VirtualHost *:443>
     SSLEngine on
     SSLCertificateFile /etc/ssl/certs/cert.pem
     ServerAdmin webmaster@localhost
-    DocumentRoot /var/www/laravel/web
+    DocumentRoot /var/www/laravel/public
 </VirtualHost>
 
-<Directory /var/www/laravel/web>
+<Directory /var/www/laravel/public>
     DirectoryIndex index.php
     AllowOverride all
     Allow from all
