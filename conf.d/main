@@ -40,6 +40,16 @@ a2dissite default
 a2ensite laravel
 a2enmod rewrite
 
+# init laravel configuration
+cd $WEBROOT
+php artisan key:generate
+
+# setup laravel configuration
+sed -i "s|'database'.*|'database' => '$DB_NAME',|" $WEBROOT/app/config/database.php
+sed -i "s|'username'.*|'username' => '$DB_USER',|" $WEBROOT/app/config/database.php
+sed -i "s|'password'.*|'password' => '$DB_PASS',|" $WEBROOT/app/config/database.php
+sed -i "s|<h1>You have arrived.</h1>|<h1>You have arrived.</h1><h5>Laravel was installed with Turnkey-laravel</h5>|" $WEBROOT/app/views/hello.php
+
 # stop mysql server
 /etc/init.d/mysql stop
 
