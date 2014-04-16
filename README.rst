@@ -26,7 +26,9 @@ How to Use Laravel
 To Update Laravel :
 
     cd /var/www/laravel
+
     composer self-update
+
     composer update
 
 QuickStart with laravel : http://laravel.com/docs/quick#routing
@@ -38,6 +40,7 @@ How to use Bower to manage other librairies
 All dependencies are listed in the bower.json
 
 To install : ```bower install```
+
 To update : ```bower update```
 
 Everything will be installed in the public/assets/vendor folder
