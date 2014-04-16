@@ -34,14 +34,14 @@ To Update Laravel :
 QuickStart with laravel : http://laravel.com/docs/quick#routing
 
 
-How to use Bower to manage other librairies
+How to use Bower
 -------------------------------------------
 
-All dependencies are listed in the bower.json
+All your project's dependencies are listed in the bower.json
 
-To install : ```bower install```
+To install them : ```bower install```
 
-To update : ```bower update```
+To update them : ```bower update```
 
 Everything will be installed in the public/assets/vendor folder
 Documentation of bower : http://bower.io/
