@@ -50,6 +50,9 @@ sed -i "s|'username'.*|'username' => '$DB_USER',|" $WEBROOT/app/config/database.
 sed -i "s|'password'.*|'password' => '$DB_PASS',|" $WEBROOT/app/config/database.php
 sed -i "s|<h1>You have arrived.</h1>|<h1>You have arrived.</h1><h5>Laravel was installed with Turnkey-laravel</h5>|" $WEBROOT/app/views/hello.php
 
+# install bower
+npm install -g bower && npm install -g grunt-cli
+
 # stop mysql server
 /etc/init.d/mysql stop
 

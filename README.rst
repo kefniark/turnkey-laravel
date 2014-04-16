@@ -12,18 +12,40 @@ This appliance includes all the standard features in `TurnKey Core`_, and on top
 
 - Laravel 4.1 with dependencies
 - Composer globaly installed
-- Node/Npm to allow to easily install Bower, Grunt
-- Bower to manage depedencies of frontend librairies (jQuery, Bootstrap, AngularJS, ...)
+- Bower to manage dependencies of your front-end package (jQuery, Bootstrap, AngularJS, ...)
+- Npm to allow to easily install Bower, Yeoman, ...
 - SSL support out of the box.
 - `PHPMyAdmin`_ administration frontend for MySQL (listening on port 12322 - uses SSL).
 - Postfix MTA (bound to localhost) to allow sending of email (e.g., password recovery).
 - Webmin modules for configuring Apache2, PHP, MySQL and Postfix.
 
+
+How to Use Laravel
+-------------------------------------------
+
+To Update Laravel :
+    cd /var/www/laravel
+    composer self-update
+    composer update
+
+QuickStart with laravel : http://laravel.com/docs/quick#routing
+
+
+How to use Bower to manage other librairies
+-------------------------------------------
+
+All dependencies are listed in the bower.json
+To install : ```bower install```
+To update : ```bower update```
+
+Everything will be installed in the public/assets/vendor folder
+Documentation of bower : http://bower.io/
+
+
 Credentials *(passwords set at first boot)*
 -------------------------------------------
 
 -  Webmin, SSH, MySQL, phpMyAdmin: username **root**
-
 .. _Laravel: http://http://laravel.com
 .. _TurnKey Core: http://www.turnkeylinux.org/core
 .. _PHPMyAdmin: http://www.phpmyadmin.net
