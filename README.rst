@@ -12,6 +12,8 @@ This appliance includes all the standard features in `TurnKey Core`_, and on top
 
 - Laravel 4.1 with dependencies
 - Composer globaly installed
+- Node/Npm to allow to easily install Bower, Grunt
+- Bower to manage depedencies of frontend librairies (jQuery, Bootstrap, AngularJS, ...)
 - SSL support out of the box.
 - `PHPMyAdmin`_ administration frontend for MySQL (listening on port 12322 - uses SSL).
 - Postfix MTA (bound to localhost) to allow sending of email (e.g., password recovery).
