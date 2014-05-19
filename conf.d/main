@@ -63,7 +63,7 @@ echo '{
         "angular-latest": "~1.2"
     }
 }' > $WEBROOT/bower.json
-bower install --allow-root
+bower install --allow-root --config.interactive=false
 
 # stop mysql server
 /etc/init.d/mysql stop
