@@ -2,7 +2,5 @@
 #include <turnkey/lamp>
 
 php-pear
-php5-dev
 php5-xsl
-php5-cli
 php5-mcrypt
