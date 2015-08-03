@@ -1,9 +1,9 @@
-turnkey-laravel-13.0 (1) turnkey; urgency=low
+turnkey-laravel-14.0 (1) turnkey; urgency=low
 
-  * PHPMyAdmin:
+  * Includes the latest stable version of Laravel (5.1 LTS).
 
-    - Configured to allow users preferences stored in database.
-    - Specified blowfish_secret and regeneration on firstboot (security).
-
-  * Note: Please refer to turnkey-core's changelog for changes common to all
+  * Note: Please refer to turnkey-lamp's changelog for changes common to all
     appliances. Here we only describe changes specific to this appliance.
+
+ -- Anton Pyrogovskyi <q@dae.pp.ua>  Mon, 3 Aug 2015 15:39:57 +0300
+  
